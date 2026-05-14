@@ -1,14 +1,26 @@
 # X bank
 
-Aplicação web front-end que simula um app bancário simples, com login mockado, sessão persistida, dashboard com saldo e transações, e fluxo de transferência com validação, cálculo de taxa e atualização do saldo em tela.
+Aplicação web front-end que simula uma experiência bancária simples, com foco em organização, UX, validação de formulários, estado global e estrutura de código escalável.
 
-O projeto foi desenvolvido como MVP de demonstração. Não há backend real, dados reais, autenticação real ou integração com instituições financeiras.
+O projeto foi desenvolvido como parte de um desafio técnico para uma aplicação bancária/fintech. A ideia não foi criar um banco completo, mas construir um MVP bem estruturado, visualmente consistente e fácil de evoluir.
 
-## Aplicação publicada
+**Deploy:** https://x-bank.vercel.app/
 
-Ainda não há link público de deploy configurado para este projeto.
+---
 
-## Tecnologias utilizadas
+## Visão geral
+
+O X bank é um app bancário fictício com três fluxos principais:
+
+- autenticação mockada com persistência de sessão;
+- dashboard com saldo, ações rápidas e transações recentes;
+- transferência com validação, cálculo de taxa, atualização de saldo e inclusão da nova transação no histórico.
+
+A interface segue uma direção visual mais minimalista e dark, com inspiração em produtos digitais premium: menos ruído visual, mais foco nos dados financeiros e uma navegação simples.
+
+---
+
+## Stack
 
 - React
 - TypeScript
@@ -27,53 +39,107 @@ Ainda não há link público de deploy configurado para este projeto.
 - Testing Library
 - Lucide React
 
+---
+
+## Funcionalidades
+
+### Autenticação
+
+- Login mockado.
+- Validação de e-mail e senha.
+- Persistência de sessão no `localStorage` com Zustand.
+- Redirecionamento automático conforme estado de autenticação.
+- Rotas privadas protegidas.
+- Logout com limpeza da sessão.
+
+### Dashboard
+
+- Exibição do saldo total.
+- Lista de transações recentes.
+- Ações rápidas, incluindo navegação para transferência.
+- Cards contextuais relacionados a pagamentos globais e cripto/fiat.
+- Estado global de conta e transações com Zustand.
+- Carregamento dos dados via React Query e service mockado.
+
+### Transferência
+
+- Formulário validado com React Hook Form e Zod.
+- Selects baseados em Radix/shadcn.
+- Cálculo de taxa fixa e valor estimado recebido.
+- Validação de saldo insuficiente.
+- Mutation mockada com React Query.
+- Atualização do saldo após confirmação.
+- Inclusão da nova transação no topo da lista.
+- Feedback visual com Toast.
+
+---
+
 ## Como rodar localmente
 
-Pré-requisitos:
+### Pré-requisitos
 
-- Node.js instalado
-- npm instalado
+- Node.js
+- npm
 
-Instale as dependências:
+### Instalação
 
 ```bash
 npm install
 ```
 
-Rode o ambiente de desenvolvimento:
+### Ambiente de desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-Gere o build de produção:
+### Build de produção
 
 ```bash
 npm run build
 ```
 
-Execute os testes:
+### Preview do build
+
+```bash
+npm run preview
+```
+
+### Testes
 
 ```bash
 npm run test:run
 ```
 
+### Lint
+
+```bash
+npm run lint
+```
+
+---
+
 ## Scripts disponíveis
 
-- `npm run dev`: inicia o Vite em modo desenvolvimento.
-- `npm run build`: executa o typecheck com TypeScript e gera o build de produção.
-- `npm run preview`: serve localmente o build gerado.
-- `npm run test`: inicia o Vitest em modo interativo.
-- `npm run test:run`: executa a suíte de testes uma vez.
-- `npm run lint`: executa o ESLint no projeto.
+| Script | Descrição |
+| --- | --- |
+| `npm run dev` | Inicia o projeto em modo desenvolvimento |
+| `npm run build` | Executa o typecheck e gera o build de produção |
+| `npm run preview` | Serve localmente o build gerado |
+| `npm run test` | Inicia o Vitest em modo interativo |
+| `npm run test:run` | Executa a suíte de testes uma vez |
+| `npm run lint` | Executa o ESLint no projeto |
 
-## Arquitetura de pastas
+---
+
+## Estrutura do projeto
 
 ```txt
 src/
   app/
     providers.tsx
     router.tsx
+
   features/
     auth/
       components/
@@ -82,12 +148,14 @@ src/
       services/
       store/
       types/
+
     dashboard/
       components/
       hooks/
       pages/
       services/
       store/
+
     transfer/
       components/
       hooks/
@@ -95,100 +163,178 @@ src/
       schemas/
       services/
       types/
+
   shared/
     components/
       layout/
       ui/
     constants/
+    hooks/
     lib/
     types/
     utils/
+
   tests/
     utils/
 ```
 
-A organização segue uma divisão por features para manter autenticação, dashboard e transferência isolados por responsabilidade. Componentes e utilitários reutilizáveis ficam em `shared`.
+A aplicação foi organizada por domínio de funcionalidade. Autenticação, dashboard e transferência ficam separados em `features`, enquanto componentes reutilizáveis, utilitários, tipos e configurações compartilhadas ficam em `shared`.
+
+Essa estrutura mantém as responsabilidades mais claras e evita concentrar regra de negócio diretamente nas páginas.
+
+---
 
 ## Decisões técnicas
 
-- **React Router** gerencia rotas públicas e privadas, com `ProtectedRoute` para bloquear telas autenticadas.
-- **Zustand** guarda a sessão mockada e o estado runtime da conta, como saldo e transações.
-- **React Query** simula operações assíncronas de leitura e mutation, separando server state simulado de estado local.
-- **React Hook Form + Zod** centralizam validação de login e transferência.
-- **Services mockados** simulam chamadas externas sem criar backend real.
-- **Tailwind + CVA** sustentam um design system simples, com componentes reutilizáveis e variantes controladas.
-- **Axios** está configurado como camada HTTP centralizada para demonstrar como o projeto evoluiria para uma API real.
+### Separação por features
+
+A estrutura foi pensada para manter cada fluxo principal isolado. Isso facilita manutenção, leitura e evolução do projeto sem transformar a pasta `components` em um lugar genérico demais.
+
+### Zustand para estado global
+
+Zustand foi usado para guardar a sessão mockada e o estado da conta em runtime, como saldo e transações. Também foi utilizado para manter a persistência da autenticação no `localStorage`.
+
+### React Query para operações assíncronas
+
+React Query foi usado para organizar buscas e mutations mesmo com dados mockados. A ideia é manter o projeto próximo de uma estrutura real, onde os dados viriam de uma API.
+
+### Axios como camada HTTP
+
+O projeto possui uma instância centralizada de Axios e services que passam por essa camada. Mesmo sem backend real, essa decisão deixa a aplicação preparada para trocar os mocks por endpoints reais com menos impacto na estrutura.
+
+### React Hook Form + Zod
+
+Os formulários de login e transferência usam React Hook Form com Zod para validação. Isso deixa as regras mais explícitas, melhora a experiência de preenchimento e reduz lógica manual nos componentes.
+
+### Radix UI e shadcn/ui
+
+Radix e shadcn/ui foram usados como base para componentes acessíveis e reutilizáveis, como select, button, card, input, skeleton e toast.
+
+### Tailwind CSS + CVA
+
+Tailwind foi usado para estilização e CVA para organizar variantes de componentes, principalmente em elementos reutilizáveis como botões e cards.
+
+---
 
 ## Fluxo da aplicação
 
-1. Usuário acessa `/login`.
-2. Usuário informa e-mail e senha válidos.
-3. A sessão mockada é salva no `localStorage` via Zustand persist.
-4. Usuário autenticado é redirecionado para `/dashboard`.
-5. O dashboard carrega dados mockados de conta e transações com React Query.
-6. O usuário clica em `Transferir` e navega para `/transfer`.
-7. O formulário valida destinatário, país, valor e moedas.
-8. A aplicação calcula taxa fixa de `R$ 12,90`, câmbio `BRL -> USD` com taxa `0.19042`, valor recebido e total debitado.
-9. Ao confirmar uma transferência válida, uma mutation mockada é executada.
-10. O saldo é atualizado no Zustand e uma nova transação é adicionada no topo da lista.
-11. O usuário recebe feedback de sucesso e volta para `/dashboard`.
+```txt
+Usuário acessa o app
+        ↓
+Se não houver sessão, vai para /login
+        ↓
+Login mockado com e-mail e senha válidos
+        ↓
+Sessão persistida localmente
+        ↓
+Dashboard com saldo e transações
+        ↓
+Usuário acessa a tela de transferência
+        ↓
+Formulário valida os dados preenchidos
+        ↓
+Aplicação calcula taxa, câmbio e total debitado
+        ↓
+Transferência é confirmada
+        ↓
+Saldo é atualizado
+        ↓
+Nova transação aparece no dashboard
+```
 
-## Estratégia de testes
+---
 
-A suíte usa Vitest e Testing Library, priorizando comportamento visível ao usuário.
+## Dados e limitações do MVP
 
-Coberturas atuais:
+Este projeto não possui backend real. Todos os dados são fictícios e usados apenas para demonstrar o comportamento do front-end.
 
-- renderização básica com providers;
+Alguns pontos foram mantidos intencionalmente simples:
+
+- o login é mockado;
+- a sessão é persistida localmente;
+- as transações são mockadas;
+- a transferência simula uma mutation;
+- o cálculo de taxa e câmbio é local;
+- não há integração com instituições financeiras.
+
+Essa escolha mantém o projeto dentro do escopo do desafio, sem adicionar complexidade que não seria necessária para avaliar a estrutura front-end.
+
+---
+
+## Testes
+
+A suíte de testes usa Vitest e Testing Library, priorizando comportamento visível ao usuário.
+
+Coberturas principais:
+
+- renderização inicial da aplicação com providers;
 - validação do schema de login;
 - estado vazio da lista de transações;
-- cálculo e validação do formulário de transferência;
+- validação e cálculo do formulário de transferência;
 - fluxo principal autenticado: login, dashboard, navegação para transferência, confirmação, saldo atualizado e nova transação visível.
 
-Os testes evitam depender de detalhes internos de implementação e validam interações por labels, botões, headings e textos renderizados.
+Os testes evitam depender de detalhes internos de implementação e focam em interações reais: labels, botões, headings e textos renderizados.
+
+---
 
 ## Segurança
 
-Este MVP não implementa segurança real. Ele usa dados mockados, login simulado e sessão persistida no `localStorage` apenas para fins de demonstração do fluxo front-end.
+Este é um MVP front-end com dados mockados. Ele não implementa segurança bancária real, autenticação real ou qualquer integração com sistemas financeiros.
 
-Em uma aplicação bancária real, a proteção não poderia depender do front-end. O cliente web é sempre inspecionável, modificável e sujeito a engenharia reversa.
+Mesmo assim, o projeto foi pensado considerando como a aplicação deveria evoluir em um cenário real.
 
 ### Engenharia reversa
 
-Uma aplicação real deveria assumir que todo código JavaScript enviado ao navegador pode ser lido, copiado, analisado e alterado. Minificação, code splitting e ofuscação podem dificultar análise casual, mas não protegem regras de negócio sensíveis.
+Em uma aplicação real, qualquer código JavaScript enviado ao navegador pode ser inspecionado. Por isso, regras sensíveis não devem depender do front-end.
 
-Medidas adequadas para um produto real:
+Medidas importantes em produção:
 
-- manter regras críticas, permissões, validações financeiras e cálculo final no backend;
-- nunca embutir segredos, chaves privadas, tokens administrativos ou credenciais no bundle front-end;
-- validar todas as operações no servidor, mesmo que o front-end já tenha validado;
-- usar autenticação forte, autorização por escopo e checagens server-side por usuário, conta e operação;
+- manter regras críticas e validações financeiras no backend;
+- nunca expor segredos, chaves privadas ou credenciais no bundle;
+- validar permissões, limites e operações no servidor;
+- usar autenticação e autorização por escopo;
 - registrar auditoria de ações sensíveis;
-- aplicar rate limiting, detecção de abuso e monitoramento de comportamento suspeito;
-- usar headers de segurança, como CSP, para reduzir riscos de injeção e execução indevida de scripts.
+- aplicar rate limiting e monitoramento de comportamento suspeito;
+- usar headers de segurança, como CSP, para reduzir riscos de execução indevida de scripts.
+
+Minificação e ofuscação podem dificultar análise casual, mas não substituem segurança real no servidor.
 
 ### Vazamento de dados
 
-Uma aplicação real também deveria tratar dados bancários e pessoais como informações sensíveis desde a origem. Neste MVP, os dados são fictícios e permanecem no navegador.
+Em produção, dados financeiros e pessoais deveriam ser tratados como informações sensíveis desde a origem.
 
-Medidas adequadas para reduzir vazamento de dados em produção:
+Medidas importantes:
 
 - trafegar dados apenas via HTTPS;
-- armazenar dados sensíveis no servidor com criptografia em repouso quando aplicável;
-- usar cookies `HttpOnly`, `Secure` e `SameSite` para tokens de sessão quando a arquitetura permitir;
-- evitar guardar tokens sensíveis, documentos, saldos reais ou dados pessoais em `localStorage`;
-- aplicar controle de acesso no backend em todas as rotas e consultas;
-- limitar dados retornados pela API ao mínimo necessário para a tela;
-- mascarar ou omitir dados sensíveis em logs, analytics e ferramentas de observabilidade;
+- evitar armazenar dados sensíveis em `localStorage`;
+- usar cookies `HttpOnly`, `Secure` e `SameSite` quando adequado;
+- limitar os dados retornados pela API ao mínimo necessário;
+- aplicar controle de acesso no backend em todas as consultas;
+- mascarar dados sensíveis em logs e ferramentas de observabilidade;
 - proteger variáveis de ambiente e segredos em cofres apropriados;
 - definir políticas de retenção, auditoria e revogação de acesso.
 
+No X bank, a persistência local existe apenas para simular a experiência de sessão em um desafio front-end.
+
+---
+
 ## Melhorias futuras
 
-- Integrar backend real com autenticação segura.
-- Trocar mocks por endpoints versionados.
-- Implementar refresh de sessão e expiração controlada.
-- Adicionar testes end-to-end com Playwright.
-- Criar tratamento global de erros e notificações.
-- Adicionar acessibilidade mais completa para navegação por teclado.
-- Publicar o projeto em uma plataforma como Vercel ou Netlify.
+- Integração com backend real.
+- Autenticação com tokens e expiração de sessão.
+- Endpoints versionados para conta, transações e transferências.
+- Página de detalhes da transação.
+- Geração de comprovante após transferência.
+- Histórico completo com busca e filtros.
+- Suporte real a múltiplas moedas.
+- Tratamento global de erros.
+- Testes end-to-end com Playwright.
+- Melhorias de acessibilidade e navegação por teclado.
+- Responsividade mobile mais completa.
+
+---
+
+## Sobre o projeto
+
+O X bank foi construído com foco em clareza, consistência e organização. A proposta foi entregar um projeto simples, mas com estrutura suficiente para demonstrar decisões reais de front-end: separação por domínio, validação bem definida, estado previsível, testes e uma UI alinhada ao contexto financeiro.
+
